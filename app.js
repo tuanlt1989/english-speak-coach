@@ -102,7 +102,7 @@ function setMode(mode) {
   localStorage.setItem(MODE_KEY, mode);
 }
 function topicsForMode(mode) {
-  return VOCAB_DATA.topics.filter(t => t.category === mode);
+  return VOCAB_DATA.topics.filter(t => t.category === mode || t.category === "core");
 }
 function setActiveModeUI(mode) {
   document.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));

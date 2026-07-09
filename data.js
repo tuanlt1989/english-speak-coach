@@ -1,8 +1,62 @@
 // Nội dung học: Banking/Fintech + IT + Giao tiếp công sở + Đời sống
-// category: "work" (công việc) hoặc "life" (đời sống, ngoài công việc)
+// category: "work" (công việc), "life" (đời sống) hoặc "core" (nền tảng - hiện ở cả 2 mode)
 // Mỗi topic: words (từ vựng) + phrases (cụm câu giao tiếp)
 const VOCAB_DATA = {
   topics: [
+    {
+      id: "glue_words", name: "Từ nối câu tự nhiên", icon: "🔗", color: "#6D5AE6", category: "core",
+      words: [
+        { id:"gw1", word:"actually", ipa:"/ˈæktʃuəli/", meaning:"thật ra thì", example:"Actually, I think we should wait.", icon:"💭", mnemonic:"Actual = thực tế, actually = nói thật ra" },
+        { id:"gw2", word:"by the way", ipa:"/baɪ ðə weɪ/", meaning:"à mà, tiện thể", example:"By the way, did you finish the report?", icon:"🚶", mnemonic:"'Trên đường đi' tiện nhắc thêm 1 chuyện" },
+        { id:"gw3", word:"to be honest", ipa:"/tə bi ˈɑnɪst/", meaning:"thành thật mà nói", example:"To be honest, I don't think that will work.", icon:"🫡", mnemonic:"Honest = thật thà, dùng để mở đầu ý kiến thật lòng" },
+        { id:"gw4", word:"the thing is", ipa:"/ðə θɪŋ ɪz/", meaning:"vấn đề là", example:"The thing is, we don't have enough time.", icon:"🧩", mnemonic:"'Cái sự việc là' - dẫn vào lý do/khó khăn thật" },
+        { id:"gw5", word:"on top of that", ipa:"/ɑn tɑp əv ðæt/", meaning:"hơn nữa, thêm vào đó", example:"On top of that, the client changed the requirements.", icon:"📚", mnemonic:"Chồng thêm 1 lớp 'trên đỉnh' những gì đã nói" },
+        { id:"gw6", word:"anyway", ipa:"/ˈɛniweɪ/", meaning:"dù sao thì", example:"Anyway, let's move on to the next topic.", icon:"🔄", mnemonic:"Any (bất kỳ) + way (cách) = dù theo cách nào thì..." },
+        { id:"gw7", word:"I mean", ipa:"/aɪ min/", meaning:"ý tôi là", example:"I mean, it's not a big deal, but still.", icon:"💬", mnemonic:"Dùng khi muốn giải thích rõ hơn ý vừa nói" },
+        { id:"gw8", word:"sort of", ipa:"/sɔrt əv/", meaning:"kiểu như, hơi hơi", example:"It's sort of complicated to explain.", icon:"🌀", mnemonic:"'Kiểu/loại' này - dùng khi không chắc chắn 100%" },
+        { id:"gw9", word:"as far as I know", ipa:"/æz fɑr æz aɪ noʊ/", meaning:"theo tôi biết thì", example:"As far as I know, the meeting is at 3pm.", icon:"🔍", mnemonic:"'Xa nhất mà tôi biết được' - nói khi không chắc 100%" },
+        { id:"gw10", word:"speaking of which", ipa:"/ˈspikɪŋ əv wɪtʃ/", meaning:"nói đến chuyện đó", example:"Speaking of which, have you talked to him yet?", icon:"🗣️", mnemonic:"Dùng để chuyển sang ý liên quan vừa nhắc tới" },
+        { id:"gw11", word:"at the end of the day", ipa:"/æt ði ɛnd əv ðə deɪ/", meaning:"suy cho cùng", example:"At the end of the day, it's the client's decision.", icon:"🌇", mnemonic:"'Cuối ngày nhìn lại' - tổng kết điều quan trọng nhất" },
+        { id:"gw12", word:"either way", ipa:"/ˈiðər weɪ/", meaning:"dù thế nào đi nữa", example:"Either way, we need to inform the team.", icon:"⚖️", mnemonic:"Either = 1 trong 2, either way = theo cách nào cũng vậy" },
+        { id:"gw13", word:"no worries", ipa:"/noʊ ˈwɜriz/", meaning:"không sao đâu", example:"No worries, take your time.", icon:"😊", mnemonic:"No (không) + worries (lo lắng) = đừng lo" },
+        { id:"gw14", word:"that said", ipa:"/ðæt sɛd/", meaning:"dù vậy, tuy nhiên", example:"That said, we should still be careful.", icon:"🔀", mnemonic:"'Đã nói vậy rồi, nhưng mà...' - chuyển ý nhẹ nhàng" },
+        { id:"gw15", word:"more or less", ipa:"/mɔr ɔr lɛs/", meaning:"đại khái, gần như vậy", example:"The project is more or less finished.", icon:"🤏", mnemonic:"More (nhiều hơn) or (hoặc) less (ít hơn) = xấp xỉ vậy" },
+        { id:"gw16", word:"by all means", ipa:"/baɪ ɔl minz/", meaning:"cứ tự nhiên, được thôi", example:"By all means, go ahead and ask.", icon:"👍", mnemonic:"Dùng khi đồng ý thoải mái cho ai làm gì đó" }
+      ],
+      phrases: [
+        { id:"gwp1", phrase:"Actually, to be honest, I haven't started yet.", meaning:"Thật ra thì, nói thật tôi chưa bắt đầu đâu.", context:"Kết hợp 2 từ nối để nói thật nhẹ nhàng hơn." },
+        { id:"gwp2", phrase:"The thing is, we're already over budget.", meaning:"Vấn đề là, chúng ta đã vượt ngân sách rồi.", context:"" },
+        { id:"gwp3", phrase:"Anyway, that's a story for another day.", meaning:"Dù sao thì, chuyện đó để hôm khác kể.", context:"" },
+        { id:"gwp4", phrase:"Speaking of which, that reminds me of something.", meaning:"Nói đến chuyện đó, làm tôi nhớ ra 1 việc.", context:"" },
+        { id:"gwp5", phrase:"At the end of the day, we just want it to work.", meaning:"Suy cho cùng, chúng ta chỉ muốn nó chạy được thôi.", context:"" },
+        { id:"gwp6", phrase:"That said, let's give it a try.", meaning:"Dù vậy, cứ thử xem sao.", context:"" }
+      ]
+    },
+    {
+      id: "pronunciation_clinic", name: "Phát âm cho người Việt", icon: "🎯", color: "#DC7B3E", category: "core",
+      words: [
+        { id:"pc1", word:"think", ipa:"/θɪŋk/", meaning:"âm TH vô thanh (θ) - cắn nhẹ đầu lưỡi giữa 2 hàm răng, không phải âm T", example:"I think this is right.", icon:"👅", mnemonic:"Đặt lưỡi giữa răng rồi thổi hơi ra, đừng để lưỡi chạm vòm miệng như âm T" },
+        { id:"pc2", word:"this", ipa:"/ðɪs/", meaning:"âm TH hữu thanh (ð) - giống âm ở 'think' nhưng có rung dây thanh", example:"This is my book.", icon:"👅", mnemonic:"Đặt tay lên cổ họng - phải cảm nhận được độ rung khi phát âm" },
+        { id:"pc3", word:"light", ipa:"/laɪt/", meaning:"âm L cuối từ - đầu lưỡi phải chạm vòm miệng trên, không được bỏ qua", example:"Turn on the light.", icon:"💡", mnemonic:"Đầu lưỡi chạm nhẹ vòm miệng trên, giữ đúng 1 nhịp rồi mới buông" },
+        { id:"pc4", word:"right", ipa:"/raɪt/", meaning:"âm R - cong lưỡi ra sau, không chạm vào đâu cả (khác hẳn âm L)", example:"Turn right, not left.", icon:"🔄", mnemonic:"R: lưỡi lơ lửng không chạm đâu; L: lưỡi chạm rõ vòm miệng" },
+        { id:"pc5", word:"very", ipa:"/ˈvɛri/", meaning:"âm V - cắn nhẹ môi dưới bằng răng trên rồi rung, khác âm W (tròn môi)", example:"It's very good.", icon:"👄", mnemonic:"Cắn răng trên vào môi dưới rồi rung, giống hơi nhai môi nhẹ" },
+        { id:"pc6", word:"walked", ipa:"/wɔkt/", meaning:"đuôi -ed đọc là /t/ khi từ kết thúc âm vô thanh (k, p, s, ch, sh)", example:"I walked to work yesterday.", icon:"🚶", mnemonic:"Walk kết thúc âm 'k' (vô thanh) → -ed đọc /t/, không đọc /əd/" },
+        { id:"pc7", word:"played", ipa:"/pleɪd/", meaning:"đuôi -ed đọc là /d/ khi từ kết thúc âm hữu thanh (nguyên âm, l, n, v, r...)", example:"We played football all afternoon.", icon:"⚽", mnemonic:"Play kết thúc nguyên âm (hữu thanh) → -ed đọc /d/" },
+        { id:"pc8", word:"wanted", ipa:"/ˈwɑntɪd/", meaning:"đuôi -ed đọc thành 1 âm tiết riêng /ɪd/ khi từ kết thúc bằng t hoặc d", example:"She wanted to leave early.", icon:"🙋", mnemonic:"Want kết thúc bằng 't' → phải thêm hẳn 1 âm tiết /ɪd/, không được nuốt âm" },
+        { id:"pc9", word:"cats", ipa:"/kæts/", meaning:"đuôi -s/-es đọc là /s/ khi từ kết thúc âm vô thanh", example:"I have two cats at home.", icon:"🐱", mnemonic:"Cat kết thúc 't' (vô thanh) → -s đọc /s/, không đọc /z/" },
+        { id:"pc10", word:"dogs", ipa:"/dɔgz/", meaning:"đuôi -s/-es đọc là /z/ khi từ kết thúc âm hữu thanh", example:"They have three dogs.", icon:"🐶", mnemonic:"Dog kết thúc 'g' (hữu thanh) → -s đọc /z/, giống âm 'z' rung" },
+        { id:"pc11", word:"record", ipa:"/ˈrɛkərd/ (n) - /rɪˈkɔrd/ (v)", meaning:"trọng âm rơi vào âm 1 khi là danh từ, âm 2 khi là động từ (áp dụng nhiều từ 2 âm tiết)", example:"I want to record a new record.", icon:"🎵", mnemonic:"Danh từ nhấn đầu (RE-cord), động từ nhấn cuối (re-CORD)" },
+        { id:"pc12", word:"an apple", ipa:"/ən ˈæpəl/", meaning:"nối phụ âm cuối với nguyên âm đầu của từ sau, đọc liền không tách rời", example:"I ate an apple an hour ago.", icon:"🔗", mnemonic:"Đọc liền thành 'ə-næpl', đừng dừng lại giữa 2 từ như tiếng Việt" }
+      ],
+      phrases: [
+        { id:"pcp1", phrase:"Three thin things think alike.", meaning:"Câu luyện âm TH - đọc chậm 3 lần rồi tăng tốc dần.", context:"Tongue twister luyện âm TH (θ)." },
+        { id:"pcp2", phrase:"She sells seashells by the seashore.", meaning:"Câu luyện âm S/SH kinh điển.", context:"Tongue twister luyện phân biệt S và SH." },
+        { id:"pcp3", phrase:"I really like the red lorry.", meaning:"Câu luyện phân biệt âm R và L.", context:"Chú ý lưỡi cong ra sau (R) và lưỡi chạm vòm miệng (L)." },
+        { id:"pcp4", phrase:"We walked, talked, and laughed.", meaning:"Câu luyện 3 cách đọc đuôi -ed khác nhau.", context:"walked=/t/, talked=/t/, laughed=/t/ - thử đổi sang played/needed để so sánh." },
+        { id:"pcp5", phrase:"The cats and dogs played outside.", meaning:"Câu luyện đuôi -s và -ed trong cùng 1 câu.", context:"cats=/s/, dogs=/z/, played=/d/." },
+        { id:"pcp6", phrase:"Can you record this record for me?", meaning:"Câu luyện trọng âm danh từ/động từ của từ 'record'.", context:"record (v, nhấn âm 2) - record (n, nhấn âm 1)." }
+      ]
+    },
     {
       id: "meetings", name: "Họp & Thảo luận công việc", icon: "🗓️", color: "#4F46E5", category: "work",
       words: [
