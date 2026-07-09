@@ -254,6 +254,15 @@ select, input[type=text] {
 
 .mindmap-detail { margin-top: 14px; padding: 16px; background: var(--paper); border-radius: var(--radius-sm); min-height: 60px; border: 1px solid var(--border); }
 
+.mm-branch { stroke-linecap: round; }
+.mm-node { cursor: pointer; }
+.mm-leaf-group { animation: leafSway 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; transition: transform .2s ease; }
+.mm-leaf-group:hover { animation-play-state: paused; transform: scale(1.18) !important; }
+@keyframes leafSway {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(2deg); }
+}
+
 .box-chart { display: flex; align-items: flex-end; gap: 10px; height: 150px; margin: 16px 0; }
 .box-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
 .box-bar { width: 100%; background: linear-gradient(180deg, var(--coral), var(--coral-dark)); border-radius: 8px 8px 0 0; min-height: 4px; transition: height .6s cubic-bezier(.4,.2,.2,1); }

@@ -528,33 +528,112 @@ function drawMindmap(topicId) {
   renderMindmapSVG(container, topic, detail);
 }
 
+function wrapLabel(text, maxCharsPerLine) {
+  const words = text.split(" ");
+  const lines = [];
+  let current = "";
+  words.forEach(w => {
+    const candidate = current ? current + " " + w : w;
+    if (candidate.length > maxCharsPerLine && current) {
+      lines.push(current);
+      current = w;
+    } else {
+      current = candidate;
+    }
+  });
+  if (current) lines.push(current);
+  return lines.slice(0, 2);
+}
+
+function curvedPath(x1, y1, x2, y2, curvature) {
+  const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.sqrt(dx * dx + dy * dy) || 1;
+  const nx = -dy / len, ny = dx / len;
+  const ctrlX = mx + nx * curvature, ctrlY = my + ny * curvature;
+  return `M ${x1.toFixed(1)} ${y1.toFixed(1)} Q ${ctrlX.toFixed(1)} ${ctrlY.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+}
+
 function renderMindmapSVG(container, topic, detailContainer) {
   const words = topic.words;
-  const W = 640, H = 640, cx = W / 2, cy = H / 2, r = 240;
-  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;max-width:640px;display:block;margin:0 auto">`;
-  words.forEach((w, i) => {
-    const angle = (2 * Math.PI * i) / words.length - Math.PI / 2;
-    const x = cx + r * Math.cos(angle);
-    const y = cy + r * Math.sin(angle);
-    svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${topic.color}" stroke-width="1.5" opacity="0.5"/>`;
+  const W = 760, H = 760, cx = W / 2, cy = H / 2;
+  const branchR = 150, leafR = 280;
+  const groupSize = 2;
+  const groups = [];
+  for (let i = 0; i < words.length; i += groupSize) groups.push(words.slice(i, i + groupSize));
+  const sectorAngle = (2 * Math.PI) / groups.length;
+
+  let branchSvg = "", twigSvg = "", nodeSvg = "";
+  let leafIndex = 0;
+
+  groups.forEach((group, gi) => {
+    const angle = -Math.PI / 2 + gi * sectorAngle;
+    const bx = cx + branchR * Math.cos(angle);
+    const by = cy + branchR * Math.sin(angle);
+    const curveDir = gi % 2 === 0 ? 1 : -1;
+    branchSvg += `<path class="mm-branch mm-branch-main" d="${curvedPath(cx, cy, bx, by, curveDir * 26)}" stroke="${topic.color}" stroke-width="7" fill="none"/>`;
+
+    const n = group.length;
+    group.forEach((w, i) => {
+      const spread = sectorAngle * 0.62;
+      const leafAngle = n === 1 ? angle : angle - spread / 2 + (i / (n - 1)) * spread;
+      const lx = cx + leafR * Math.cos(leafAngle);
+      const ly = cy + leafR * Math.sin(leafAngle);
+      const tCurve = (i - (n - 1) / 2) * 16 * curveDir;
+      twigSvg += `<path class="mm-branch mm-branch-twig" d="${curvedPath(bx, by, lx, ly, tCurve)}" stroke="${topic.color}" stroke-width="3.5" fill="none" opacity="0.65"/>`;
+
+      const box = getCard(w.id).box;
+      let radius = 25, fill = "#C8BFA9", ring = "";
+      if (box >= 1 && box <= 3) { radius = 30; fill = "url(#leafGrad)"; }
+      else if (box >= 4) {
+        radius = 34; fill = "url(#goldGrad)";
+        ring = `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${radius + 6}" fill="none" stroke="#D8A13B" stroke-width="2" opacity="0.55"/>`;
+      }
+      const delay = ((leafIndex * 0.22) % 2.4).toFixed(2);
+      nodeSvg += `
+        <g class="mm-node mm-leaf-group" data-id="${w.id}" style="animation-delay:${delay}s; transform-box:fill-box; transform-origin:center;">
+          ${ring}
+          <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${radius}" fill="${fill}" stroke="#FBF9F4" stroke-width="3"/>
+          <ellipse cx="${(lx - radius * 0.3).toFixed(1)}" cy="${(ly - radius * 0.35).toFixed(1)}" rx="${(radius * 0.35).toFixed(1)}" ry="${(radius * 0.2).toFixed(1)}" fill="white" opacity="0.35"/>
+          <text x="${lx.toFixed(1)}" y="${(ly + 6).toFixed(1)}" text-anchor="middle" font-size="20">${w.icon}</text>
+          <text x="${lx.toFixed(1)}" y="${(ly + radius + 18).toFixed(1)}" text-anchor="middle" font-size="11" fill="#2B241C" font-weight="600">${escapeXml(w.word)}</text>
+        </g>`;
+      leafIndex++;
+    });
   });
-  svg += `<circle cx="${cx}" cy="${cy}" r="60" fill="${topic.color}" />`;
-  svg += `<text x="${cx}" y="${cy - 6}" text-anchor="middle" font-size="26">${topic.icon}</text>`;
-  svg += `<text x="${cx}" y="${cy + 20}" text-anchor="middle" font-size="11" fill="white" font-weight="600">${escapeXml(topic.name)}</text>`;
-  words.forEach((w, i) => {
-    const angle = (2 * Math.PI * i) / words.length - Math.PI / 2;
-    const x = cx + r * Math.cos(angle);
-    const y = cy + r * Math.sin(angle);
-    const box = getCard(w.id).box;
-    const fill = box >= 4 ? "#4F9D69" : box >= 1 ? "#D8A13B" : "#C8BFA9";
-    svg += `<g class="mm-node" data-id="${w.id}" style="cursor:pointer">
-      <circle cx="${x}" cy="${y}" r="34" fill="${fill}" stroke="#FBF9F4" stroke-width="3"/>
-      <text x="${x}" y="${y - 2}" text-anchor="middle" font-size="20">${w.icon}</text>
-      <text x="${x}" y="${y + 44}" text-anchor="middle" font-size="11" fill="#2B241C" font-weight="600">${escapeXml(w.word)}</text>
-    </g>`;
-  });
+
+  const defs = `<defs>
+    <radialGradient id="leafGrad" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#8FC993"/><stop offset="100%" stop-color="#4F9D69"/>
+    </radialGradient>
+    <radialGradient id="goldGrad" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#F3CB7A"/><stop offset="100%" stop-color="#D8A13B"/>
+    </radialGradient>
+    <radialGradient id="trunkGrad" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="${topic.color}" stop-opacity="0.85"/><stop offset="100%" stop-color="${topic.color}"/>
+    </radialGradient>
+  </defs>`;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto">`;
+  svg += defs + branchSvg + twigSvg;
+  svg += `<circle cx="${cx}" cy="${cy}" r="64" fill="url(#trunkGrad)"/>`;
+  svg += `<ellipse cx="${cx - 18}" cy="${cy - 20}" rx="20" ry="14" fill="white" opacity="0.18"/>`;
+  svg += `<text x="${cx}" y="${cy - 8}" text-anchor="middle" font-size="26">${topic.icon}</text>`;
+  const nameLines = wrapLabel(topic.name, 15);
+  svg += `<text x="${cx}" y="${cy + 16}" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">${nameLines.map((line, i) => `<tspan x="${cx}" dy="${i === 0 ? 0 : 12}">${escapeXml(line)}</tspan>`).join("")}</text>`;
+  svg += nodeSvg;
   svg += `</svg>`;
   container.innerHTML = svg;
+
+  container.querySelectorAll(".mm-branch").forEach((p, idx) => {
+    const len = p.getTotalLength();
+    p.style.strokeDasharray = len;
+    p.style.strokeDashoffset = len;
+    p.getBoundingClientRect();
+    p.style.transition = `stroke-dashoffset ${0.5 + (idx % 6) * 0.06}s ease ${(idx * 0.05).toFixed(2)}s`;
+    requestAnimationFrame(() => { p.style.strokeDashoffset = 0; });
+  });
+
   container.querySelectorAll(".mm-node").forEach(node => {
     node.addEventListener("click", () => {
       const w = words.find(x => x.id === node.dataset.id);
