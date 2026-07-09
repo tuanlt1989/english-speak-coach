@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speak Coach — Luyện nói & Từ vựng công sở</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">🗣️ <span>Speak Coach</span></div>
+    <nav class="tabs">
+      <button class="tab-btn active" data-view="dashboard">🏠 Trang chủ</button>
+      <button class="tab-btn" data-view="deck">🃏 Thẻ từ</button>
+      <button class="tab-btn" data-view="mindmap">🧠 Mindmap</button>
+      <button class="tab-btn" data-view="stats">📈 Tiến độ</button>
+    </nav>
+  </header>
+
+  <main id="main">
+
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view active">
+      <div class="hero">
+        <div class="hero-stat">
+          <div class="stat-num" id="streakNum">0</div>
+          <div class="stat-label">🔥 ngày liên tiếp</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num" id="dueNum">0</div>
+          <div class="stat-label">🃏 thẻ cần ôn</div>
+        </div>
+        <div class="hero-stat">
+          <div class="stat-num" id="masteredNum">0</div>
+          <div class="stat-label">✅ từ đã thuộc</div>
+        </div>
+      </div>
+
+      <div class="card today-card">
+        <h2>Buổi học hôm nay (~45-60 phút)</h2>
+        <p class="muted">Chủ đề hôm nay: <strong id="todayTopicName">—</strong></p>
+        <ol class="plan-steps">
+          <li>🃏 Ôn từ cũ đến hạn (~10 phút)</li>
+          <li>🆕 Học 8 từ mới + hình ảnh ghi nhớ (~15 phút)</li>
+          <li>💬 Luyện cụm câu giao tiếp + nghe (~10 phút)</li>
+          <li>🎤 Luyện nói - nói theo & chấm điểm (~15 phút)</li>
+          <li>🧠 Xem mindmap tổng kết chủ đề (~5 phút)</li>
+        </ol>
+        <button id="startSessionBtn" class="btn primary big">▶ Bắt đầu buổi học hôm nay</button>
+        <div class="row">
+          <label class="muted">Hoặc chọn chủ đề khác: </label>
+          <select id="topicPicker"></select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Vì sao học kiểu này?</h3>
+        <ul class="tips">
+          <li><strong>Spaced Repetition (SRS):</strong> từ đã học sẽ tự quay lại đúng lúc sắp quên, giúp nhớ lâu mà không cần ôn dồn.</li>
+          <li><strong>Hình ảnh + mẹo nhớ (mnemonic):</strong> mỗi từ có icon và mẹo liên tưởng để nhớ nhanh hơn chữ thuần.</li>
+          <li><strong>Luyện nói thật:</strong> dùng micro để nói theo câu mẫu, app chấm độ khớp để bạn tự sửa phát âm.</li>
+          <li><strong>Mindmap:</strong> nhìn tổng thể chủ đề theo cụm, dễ nhớ hệ thống hơn học rời rạc.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SESSION FLOW -->
+    <section id="view-session" class="view">
+      <div class="session-progress">
+        <div class="seg" data-stage="review">1. Ôn cũ</div>
+        <div class="seg" data-stage="new">2. Từ mới</div>
+        <div class="seg" data-stage="phrase">3. Cụm câu</div>
+        <div class="seg" data-stage="speak">4. Luyện nói</div>
+        <div class="seg" data-stage="mindmap">5. Mindmap</div>
+      </div>
+      <div id="sessionContent" class="card"></div>
+    </section>
+
+    <!-- DECK BROWSE -->
+    <section id="view-deck" class="view">
+      <div class="card">
+        <h2>Thẻ từ vựng</h2>
+        <div class="row">
+          <label class="muted">Chủ đề: </label>
+          <select id="deckTopicPicker"></select>
+        </div>
+        <div id="deckGrid" class="deck-grid"></div>
+      </div>
+    </section>
+
+    <!-- MINDMAP -->
+    <section id="view-mindmap" class="view">
+      <div class="card">
+        <h2>Mindmap chủ đề</h2>
+        <div class="row">
+          <label class="muted">Chủ đề: </label>
+          <select id="mindmapTopicPicker"></select>
+        </div>
+        <div id="mindmapContainer"></div>
+        <div id="mindmapDetail" class="mindmap-detail"></div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section id="view-stats" class="view">
+      <div class="card">
+        <h2>Tiến độ học tập</h2>
+        <div class="hero">
+          <div class="hero-stat"><div class="stat-num" id="statTotalWords">0</div><div class="stat-label">Tổng từ trong hệ thống</div></div>
+          <div class="hero-stat"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Đã học</div></div>
+          <div class="hero-stat"><div class="stat-num" id="statMastered">0</div><div class="stat-label">Đã thuộc (box 5)</div></div>
+        </div>
+        <h3>Phân bố theo mức độ nhớ (Leitner box 1→5)</h3>
+        <div id="boxChart" class="box-chart"></div>
+        <h3>Lịch học 14 ngày gần đây</h3>
+        <div id="calendarHeatmap" class="heatmap"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
