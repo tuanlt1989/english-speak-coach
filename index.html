@@ -20,14 +20,43 @@
 <div id="app">
 
   <header class="topbar">
-    <div class="brand"><span class="brand-mark">🗣️</span><span>Speak Coach</span></div>
+    <div class="brand">
+      <svg class="brand-mark" width="30" height="30" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="var(--coral)"/><circle cx="7.5" cy="12" r="1.5" fill="white"/><circle cx="12" cy="12" r="1.5" fill="white"/><circle cx="16.5" cy="12" r="1.5" fill="white"/></svg>
+      <span>Speak Coach</span>
+    </div>
     <nav class="tabs">
-      <button class="tab-btn active" data-view="dashboard"><span class="tab-ic">🏠</span>Trang chủ</button>
-      <button class="tab-btn" data-view="deck"><span class="tab-ic">🃏</span>Thẻ từ</button>
-      <button class="tab-btn" data-view="mindmap"><span class="tab-ic">🧠</span>Mindmap</button>
-      <button class="tab-btn" data-view="stats"><span class="tab-ic">📈</span>Tiến độ</button>
+      <button class="tab-btn active" data-view="dashboard">
+        <svg class="tab-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-9"/></svg>
+        Trang chủ
+      </button>
+      <button class="tab-btn" data-view="deck">
+        <svg class="tab-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="14" height="14" rx="2.2"/><path d="M7.5 7V5.2A2.2 2.2 0 0 1 9.7 3h9.1A2.2 2.2 0 0 1 21 5.2v9.1a2.2 2.2 0 0 1-2.2 2.2H17"/></svg>
+        Thẻ từ
+      </button>
+      <button class="tab-btn" data-view="mindmap">
+        <svg class="tab-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/><path d="M12 7.2v3.3M12 10.5 6.3 17M12 10.5l5.7 6.5"/></svg>
+        Mindmap
+      </button>
+      <button class="tab-btn" data-view="stats">
+        <svg class="tab-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 20V11"/><path d="M12 20V4"/><path d="M19.5 20v-7.5"/></svg>
+        Tiến độ
+      </button>
     </nav>
   </header>
+
+  <div class="mode-bar">
+    <span class="mode-label">Bạn muốn học nội dung nào?</span>
+    <div class="mode-switch">
+      <button class="mode-btn active" data-mode="work">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8 7.5V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1.5"/></svg>
+        Công việc
+      </button>
+      <button class="mode-btn" data-mode="life">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-5-1-8-5-8-9.5A7.5 7.5 0 0 1 12 3a7.5 7.5 0 0 1 8 8.5c0 4.5-3 8.5-8 9.5z"/><path d="M12 21V10"/><path d="M12 13.5c2-.7 3.8-2.4 3.8-5.3"/></svg>
+        Đời sống
+      </button>
+    </div>
+  </div>
 
   <main id="main">
 
@@ -116,6 +145,11 @@
           <select id="mindmapTopicPicker"></select>
         </div>
         <div id="mindmapContainer"></div>
+        <div class="mm-legend">
+          <span class="mm-legend-item"><i class="mm-dot mm-dot-bud"></i>Chưa học</span>
+          <span class="mm-legend-item"><i class="mm-dot mm-dot-leaf"></i>Đang học</span>
+          <span class="mm-legend-item"><i class="mm-dot mm-dot-gold"></i>Đã thuộc</span>
+        </div>
         <div id="mindmapDetail" class="mindmap-detail"></div>
       </div>
     </section>

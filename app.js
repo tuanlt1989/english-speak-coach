@@ -88,9 +88,36 @@ function newWordsForTopic(topicId, limit = 8) {
   return topic.words.filter(w => getCard(w.id).box === 0).slice(0, limit);
 }
 function todayTopic() {
-  const dayIndex = Math.floor(Date.now() / 86400000) % VOCAB_DATA.topics.length;
-  return VOCAB_DATA.topics[dayIndex];
+  const list = topicsForMode(getMode());
+  const dayIndex = Math.floor(Date.now() / 86400000) % list.length;
+  return list[dayIndex];
 }
+
+// ===================== Mode (Công việc / Đời sống) =====================
+const MODE_KEY = "speakCoachMode_v1";
+function getMode() {
+  return localStorage.getItem(MODE_KEY) || "work";
+}
+function setMode(mode) {
+  localStorage.setItem(MODE_KEY, mode);
+}
+function topicsForMode(mode) {
+  return VOCAB_DATA.topics.filter(t => t.category === mode);
+}
+function setActiveModeUI(mode) {
+  document.querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === mode));
+}
+document.querySelectorAll(".mode-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (btn.classList.contains("active")) return;
+    setMode(btn.dataset.mode);
+    setActiveModeUI(btn.dataset.mode);
+    const activeView = document.querySelector(".view.active").id.replace("view-", "");
+    if (activeView === "dashboard") renderDashboard();
+    if (activeView === "deck") renderDeckView();
+    if (activeView === "mindmap") renderMindmapView();
+  });
+});
 
 // ===================== Speech (TTS / STT) =====================
 function speak(text) {
@@ -192,9 +219,10 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 });
 
 // ===================== Dashboard =====================
-function fillTopicSelect(selectEl, selectedId) {
+function fillTopicSelect(selectEl, selectedId, topics) {
+  const list = topics || VOCAB_DATA.topics;
   selectEl.innerHTML = "";
-  VOCAB_DATA.topics.forEach(t => {
+  list.forEach(t => {
     const opt = document.createElement("option");
     opt.value = t.id;
     opt.textContent = `${t.icon} ${t.name}`;
@@ -204,6 +232,7 @@ function fillTopicSelect(selectEl, selectedId) {
 }
 
 function renderDashboard() {
+  setActiveModeUI(getMode());
   document.getElementById("greeting").textContent = greetingText();
   animateCounter(document.getElementById("streakNum"), STATE.streak.count || 0);
   animateCounter(document.getElementById("dueNum"), dueCards(9999).length);
@@ -215,7 +244,7 @@ function renderDashboard() {
   document.getElementById("todayTopicName").textContent = tTopic.name;
 
   const picker = document.getElementById("topicPicker");
-  fillTopicSelect(picker, tTopic.id);
+  fillTopicSelect(picker, tTopic.id, topicsForMode(getMode()));
 
   document.getElementById("startSessionBtn").onclick = () => {
     startSession(picker.value);
@@ -454,6 +483,11 @@ function renderSessionMindmapStage(el) {
   const topic = getTopic(SESSION.topicId);
   el.innerHTML = `<p class="muted">Tổng kết chủ đề <strong>${topic.name}</strong> bằng mindmap — bấm vào từ để nghe lại:</p>
     <div id="sessionMindmap"></div>
+    <div class="mm-legend">
+      <span class="mm-legend-item"><i class="mm-dot mm-dot-bud"></i>Chưa học</span>
+      <span class="mm-legend-item"><i class="mm-dot mm-dot-leaf"></i>Đang học</span>
+      <span class="mm-legend-item"><i class="mm-dot mm-dot-gold"></i>Đã thuộc</span>
+    </div>
     <div id="sessionMindmapDetail" class="mindmap-detail"><span class="muted">Bấm vào 1 nhánh để nghe & xem nghĩa.</span></div>
     <button class="btn primary big" id="finishBtn">🏁 Hoàn thành buổi học</button>`;
   renderMindmapSVG(document.getElementById("sessionMindmap"), topic, document.getElementById("sessionMindmapDetail"));
@@ -479,13 +513,14 @@ function renderDoneStage(el) {
 
 // ===================== Deck Browse =====================
 function renderDeckView() {
+  setActiveModeUI(getMode());
   const picker = document.getElementById("deckTopicPicker");
+  const topics = topicsForMode(getMode());
+  const keepId = topics.some(t => t.id === picker.value) ? picker.value : topics[0].id;
+  fillTopicSelect(picker, keepId, topics);
   if (!picker.dataset.bound) {
-    fillTopicSelect(picker, VOCAB_DATA.topics[0].id);
     picker.addEventListener("change", () => renderDeckGrid(picker.value));
     picker.dataset.bound = "1";
-  } else {
-    fillTopicSelect(picker, picker.value);
   }
   renderDeckGrid(picker.value);
 }
@@ -510,13 +545,14 @@ function renderDeckGrid(topicId) {
 
 // ===================== Mindmap =====================
 function renderMindmapView() {
+  setActiveModeUI(getMode());
   const picker = document.getElementById("mindmapTopicPicker");
+  const topics = topicsForMode(getMode());
+  const keepId = topics.some(t => t.id === picker.value) ? picker.value : topics[0].id;
+  fillTopicSelect(picker, keepId, topics);
   if (!picker.dataset.bound) {
-    fillTopicSelect(picker, VOCAB_DATA.topics[0].id);
     picker.addEventListener("change", () => drawMindmap(picker.value));
     picker.dataset.bound = "1";
-  } else {
-    fillTopicSelect(picker, picker.value);
   }
   drawMindmap(picker.value);
 }
