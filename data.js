@@ -5,6 +5,13 @@ const VOCAB_DATA = {
   topics: [
     {
       id: "glue_words", name: "Từ nối câu tự nhiên", icon: "🔗", color: "#6D5AE6", category: "core",
+      branches: [
+        { label: "Mở đầu ý kiến", wordIds: ["gw1","gw3","gw7"] },
+        { label: "Chuyển & thêm ý", wordIds: ["gw2","gw5","gw10","gw4"] },
+        { label: "Không chắc chắn", wordIds: ["gw8","gw9","gw15"] },
+        { label: "Kết luận & chuyển hướng", wordIds: ["gw6","gw11","gw14","gw12"] },
+        { label: "Trấn an & đồng ý", wordIds: ["gw13","gw16"] }
+      ],
       words: [
         { id:"gw1", word:"actually", ipa:"/ˈæktʃuəli/", meaning:"thật ra thì", example:"Actually, I think we should wait.", icon:"💭", mnemonic:"Tưởng tượng bạn GẠT BỎ lớp vỏ giả tạo để lộ ra sự thật (actual) giấu bên trong" },
         { id:"gw2", word:"by the way", ipa:"/baɪ ðə weɪ/", meaning:"à mà, tiện thể", example:"By the way, did you finish the report?", icon:"🚶", mnemonic:"Tưởng tượng đang đi TRÊN ĐƯỜNG (the way), bạn chợt quay đầu nhắc thêm 1 chuyện tiện thể" },
@@ -34,6 +41,14 @@ const VOCAB_DATA = {
     },
     {
       id: "pronunciation_clinic", name: "Phát âm cho người Việt", icon: "🎯", color: "#DC7B3E", category: "core",
+      branches: [
+        { label: "Âm TH", wordIds: ["pc1","pc2"] },
+        { label: "Âm R / L", wordIds: ["pc3","pc4"] },
+        { label: "Âm V", wordIds: ["pc5"] },
+        { label: "Đuôi -ed", wordIds: ["pc6","pc7","pc8"] },
+        { label: "Đuôi -s", wordIds: ["pc9","pc10"] },
+        { label: "Trọng âm & nối âm", wordIds: ["pc11","pc12"] }
+      ],
       words: [
         { id:"pc1", word:"think", ipa:"/θɪŋk/", meaning:"âm TH vô thanh (θ) - cắn nhẹ đầu lưỡi giữa 2 hàm răng, không phải âm T", example:"I think this is right.", icon:"👅", mnemonic:"Tưởng tượng bạn CẮN NHẸ đầu lưỡi như cắn 1 miếng bánh mỏng rồi thổi hơi ra - đừng thụt lưỡi vào thành âm T" },
         { id:"pc2", word:"this", ipa:"/ðɪs/", meaning:"âm TH hữu thanh (ð) - giống âm ở 'think' nhưng có rung dây thanh", example:"This is my book.", icon:"👅", mnemonic:"Tưởng tượng y hệt âm 'think' nhưng giờ đặt tay lên cổ để CẢM NHẬN RUNG như động cơ xe máy nổ" },
@@ -59,6 +74,11 @@ const VOCAB_DATA = {
     },
     {
       id: "meetings", name: "Họp & Thảo luận công việc", icon: "🗓️", color: "#4F46E5", category: "work",
+      branches: [
+        { label: "Chuẩn bị & điều hành", wordIds: ["m1","m4","m6","m12"] },
+        { label: "Trao đổi ý kiến", wordIds: ["m8","m7","m9","m10"] },
+        { label: "Vai trò trong họp", wordIds: ["m2","m3","m11","m5"] }
+      ],
       words: [
         { id:"m1", word:"agenda", ipa:"/əˈdʒendə/", meaning:"chương trình họp", example:"Let's stick to the agenda so we finish on time.", icon:"📋", mnemonic:"Tưởng tượng thư ký hét lên 'A GEN ĐÃ XONG CHƯA?!' khi đang lên danh sách việc cần họp" },
         { id:"m2", word:"minutes", ipa:"/ˈmɪnɪts/", meaning:"biên bản họp", example:"Can you take the minutes for this meeting?", icon:"📝", mnemonic:"Tưởng tượng 1 người BẤM GIỜ TỪNG PHÚT (minute) trong họp, ghi lại chính xác ai nói gì phút nào" },
@@ -86,6 +106,11 @@ const VOCAB_DATA = {
     },
     {
       id: "email_chat", name: "Email & Chat công sở", icon: "📧", color: "#0EA5E9", category: "work",
+      branches: [
+        { label: "Thao tác email", wordIds: ["e1","e2","e3","e10"] },
+        { label: "Tốc độ & thái độ", wordIds: ["e4","e5","e6","e8"] },
+        { label: "Giao tiếp khéo léo", wordIds: ["e7","e9"] }
+      ],
       words: [
         { id:"e1", word:"attach", ipa:"/əˈtætʃ/", meaning:"đính kèm", example:"I've attached the file to this email.", icon:"📎", mnemonic:"Tưởng tượng dùng 1 cái GHIM đóng chặt file vào email - không thể rớt ra được" },
         { id:"e2", word:"cc", ipa:"/siː siː/", meaning:"gửi bản sao cho", example:"Please cc my manager on this email.", icon:"📤", mnemonic:"Tưởng tượng đang dùng GIẤY CARBON (Carbon Copy) kẹp phía sau, viết 1 lần mà ra 2 bản giống hệt gửi cho sếp" },
@@ -109,6 +134,11 @@ const VOCAB_DATA = {
     },
     {
       id: "banking_fintech", name: "Ngân hàng số & Fintech", icon: "🏦", color: "#16A34A", category: "work",
+      branches: [
+        { label: "Giao dịch & tiền", wordIds: ["b1","b5","b6"] },
+        { label: "Bảo mật & xác thực", wordIds: ["b2","b7","b8","b9"] },
+        { label: "Vận hành hệ thống", wordIds: ["b3","b4","b10"] }
+      ],
       words: [
         { id:"b1", word:"transaction", ipa:"/trænˈzækʃən/", meaning:"giao dịch", example:"The transaction failed due to insufficient balance.", icon:"💳", mnemonic:"Tưởng tượng tiền XUYÊN (trans) qua 1 cánh cửa từ ví bạn sang ví người khác - đó là hành động (action) giao dịch" },
         { id:"b2", word:"authentication", ipa:"/ɔːθɛntɪˈkeɪʃən/", meaning:"xác thực", example:"Two-factor authentication adds an extra layer of security.", icon:"🔐", mnemonic:"Tưởng tượng 1 con dấu đỏ chót đóng lên mặt bạn để xác nhận đây là hàng THẬT (authentic), không giả mạo" },
@@ -132,6 +162,11 @@ const VOCAB_DATA = {
     },
     {
       id: "agile_dev", name: "Agile & Phát triển phần mềm", icon: "💻", color: "#DB2777", category: "work",
+      branches: [
+        { label: "Chu trình làm việc", wordIds: ["a1","a2","a4","a5"] },
+        { label: "Chất lượng code", wordIds: ["a3","a6","a7","a8"] },
+        { label: "Vấn đề kỹ thuật", wordIds: ["a9","a10"] }
+      ],
       words: [
         { id:"a1", word:"sprint", ipa:"/sprɪnt/", meaning:"chu kỳ làm việc ngắn", example:"We're in the middle of a two-week sprint.", icon:"🏃", mnemonic:"Tưởng tượng cả team CHẠY NƯỚC RÚT (sprint) hết tốc lực trong đúng 2 tuần rồi ngã gục khi hết sprint" },
         { id:"a2", word:"backlog", ipa:"/ˈbæklɔg/", meaning:"danh sách việc tồn đọng", example:"Add this task to the backlog.", icon:"📚", mnemonic:"Tưởng tượng 1 khúc gỗ (log) chất đống ở phía SAU (back) lưng bạn - toàn việc chưa làm bị bỏ lại" },
@@ -155,6 +190,11 @@ const VOCAB_DATA = {
     },
     {
       id: "presentations", name: "Thuyết trình & Báo cáo", icon: "📊", color: "#EA580C", category: "work",
+      branches: [
+        { label: "Cấu trúc bài nói", wordIds: ["pr1","pr9","pr10"] },
+        { label: "Điểm nhấn nội dung", wordIds: ["pr2","pr3","pr4","pr5"] },
+        { label: "Tương tác khán giả", wordIds: ["pr6","pr7","pr8"] }
+      ],
       words: [
         { id:"pr1", word:"overview", ipa:"/ˈoʊvərvjuː/", meaning:"tổng quan", example:"Let me start with a brief overview.", icon:"🔭", mnemonic:"Tưởng tượng bạn bay trực thăng nhìn TOÀN CẢNH (over-view) cả thành phố từ trên cao" },
         { id:"pr2", word:"highlight", ipa:"/ˈhaɪlaɪt/", meaning:"điểm nổi bật", example:"The key highlight this quarter is revenue growth.", icon:"✨", mnemonic:"Tưởng tượng 1 chùm ánh sáng (light) chiếu thẳng từ trên CAO (high) xuống đúng điểm quan trọng nhất" },
@@ -178,6 +218,11 @@ const VOCAB_DATA = {
     },
     {
       id: "negotiation", name: "Thương lượng & Thuyết phục", icon: "🤝", color: "#7C3AED", category: "work",
+      branches: [
+        { label: "Nhượng bộ", wordIds: ["n1","n4","n8"] },
+        { label: "Chiến thuật", wordIds: ["n2","n3","n5","n10"] },
+        { label: "Ranh giới", wordIds: ["n6","n7","n9"] }
+      ],
       words: [
         { id:"n1", word:"compromise", ipa:"/ˈkɑmprəmaɪz/", meaning:"thỏa hiệp", example:"We need to find a compromise both sides accept.", icon:"⚖️", mnemonic:"Tưởng tượng 2 bên cùng đưa tay ra HỨA (promise) CÙNG (com-) nhau nhượng bộ để bắt tay" },
         { id:"n2", word:"leverage", ipa:"/ˈlɛvərɪdʒ/", meaning:"đòn bẩy/tận dụng", example:"We can leverage our existing user base.", icon:"🏋️", mnemonic:"Tưởng tượng dùng 1 cây ĐÒN BẨY (lever) nhấc bổng cả tảng đá nặng bằng chút lực" },
@@ -201,6 +246,10 @@ const VOCAB_DATA = {
     },
     {
       id: "calls_meetings", name: "Gọi điện & Họp online", icon: "📞", color: "#0891B2", category: "work",
+      branches: [
+        { label: "Sự cố kỹ thuật", wordIds: ["c1","c2","c7","c8","c10"] },
+        { label: "Tổ chức cuộc gọi", wordIds: ["c3","c4","c5","c6","c9"] }
+      ],
       words: [
         { id:"c1", word:"mute", ipa:"/mjut/", meaning:"tắt tiếng", example:"You're on mute, can you unmute?", icon:"🔇", mnemonic:"Tưởng tượng bạn bấm nút và cả căn phòng CÂM LẶNG (mute) ngay tức khắc" },
         { id:"c2", word:"lag", ipa:"/læg/", meaning:"độ trễ", example:"There's some lag in the connection.", icon:"🐌", mnemonic:"Tưởng tượng bạn nói trước, nhưng âm thanh cứ ì ạch KÉO LÊ (lag) phía sau mãi mới tới" },
@@ -224,6 +273,11 @@ const VOCAB_DATA = {
     },
     {
       id: "troubleshooting", name: "Xử lý sự cố & Hỗ trợ", icon: "🛠️", color: "#B91C1C", category: "work",
+      branches: [
+        { label: "Phát hiện vấn đề", wordIds: ["t1","t2","t5","t4"] },
+        { label: "Xử lý & khắc phục", wordIds: ["t3","t8","t10","t6"] },
+        { label: "Phản ứng khẩn cấp", wordIds: ["t7","t9"] }
+      ],
       words: [
         { id:"t1", word:"issue", ipa:"/ˈɪʃuː/", meaning:"vấn đề/sự cố", example:"We're looking into the issue now.", icon:"⚠️", mnemonic:"Tưởng tượng 1 tia lửa nhỏ vừa lóe lên từ hệ thống - chưa cháy lớn nhưng cần chú ý ngay" },
         { id:"t2", word:"glitch", ipa:"/glɪtʃ/", meaning:"trục trặc nhỏ", example:"There was a minor glitch in the app.", icon:"⚡", mnemonic:"Tưởng tượng màn hình giật NHẤP NHÁY (glitch) đúng 1 giây rồi trở lại bình thường" },
@@ -247,6 +301,11 @@ const VOCAB_DATA = {
     },
     {
       id: "feedback_review", name: "Phản hồi & Đánh giá công việc", icon: "🗣️", color: "#CA8A04", category: "work",
+      branches: [
+        { label: "Điểm cần nói", wordIds: ["f2","f3","f4"] },
+        { label: "Cách góp ý", wordIds: ["f1","f9","f6"] },
+        { label: "Tự đánh giá & mục tiêu", wordIds: ["f7","f8","f10","f5"] }
+      ],
       words: [
         { id:"f1", word:"constructive", ipa:"/kənˈstrʌktɪv/", meaning:"mang tính xây dựng", example:"Please give me constructive feedback.", icon:"🏗️", mnemonic:"Tưởng tượng lời góp ý được XÂY (construct) thành 1 tòa nhà vững chắc hơn, không phải đập phá" },
         { id:"f2", word:"strength", ipa:"/strɛŋθ/", meaning:"điểm mạnh", example:"Communication is one of your strengths.", icon:"💪", mnemonic:"Tưởng tượng bạn gồng cơ tay khoe SỨC MẠNH (strength) - đó chính là điểm mạnh của bạn" },
@@ -270,6 +329,11 @@ const VOCAB_DATA = {
     },
     {
       id: "smalltalk_daily", name: "Giao tiếp xã giao & Đời sống công sở", icon: "☕", color: "#65A30D", category: "work",
+      branches: [
+        { label: "Hỏi thăm", wordIds: ["s1","s2","s7"] },
+        { label: "Đời sống công sở", wordIds: ["s3","s4","s5","s10"] },
+        { label: "Kết nối đồng nghiệp", wordIds: ["s6","s8","s9"] }
+      ],
       words: [
         { id:"s1", word:"catch up", ipa:"/kætʃ ʌp/", meaning:"trò chuyện cập nhật", example:"We should catch up over coffee sometime.", icon:"☕", mnemonic:"Tưởng tượng bạn chạy đuổi theo BẮT KỊP (catch up) người bạn lâu ngày không gặp để nghe kể chuyện" },
         { id:"s2", word:"weekend", ipa:"/ˈwikɛnd/", meaning:"cuối tuần", example:"How was your weekend?", icon:"🌞", mnemonic:"Tưởng tượng tuần làm việc (week) chạy tới vạch ĐÍCH (end) - đó là 2 ngày nghỉ ngơi" },
@@ -293,6 +357,11 @@ const VOCAB_DATA = {
     },
     {
       id: "travel_social", name: "Du lịch & Giao tiếp xã hội", icon: "✈️", color: "#0D9488", category: "life",
+      branches: [
+        { label: "Di chuyển", wordIds: ["tr1","tr2","tr10","tr5"] },
+        { label: "Thủ tục & đặt chỗ", wordIds: ["tr3","tr4"] },
+        { label: "Trải nghiệm địa phương", wordIds: ["tr6","tr7","tr8","tr9"] }
+      ],
       words: [
         { id:"tr1", word:"itinerary", ipa:"/aɪˈtɪnərɛri/", meaning:"lịch trình", example:"Here's our itinerary for the trip.", icon:"🗺️", mnemonic:"Tưởng tượng 1 tấm bản đồ dài dằng dặc ghi rõ TỪNG ĐIỂM bạn sẽ đi qua trên chuyến đi" },
         { id:"tr2", word:"layover", ipa:"/ˈleɪoʊvər/", meaning:"quá cảnh", example:"We have a 3-hour layover in Bangkok.", icon:"🛬", mnemonic:"Tưởng tượng bạn NẰM (lay) vật ra ghế sân bay chờ QUA (over) 1 chặng transit giữa đường" },
@@ -316,6 +385,11 @@ const VOCAB_DATA = {
     },
     {
       id: "family_friends", name: "Gia đình & Bạn bè", icon: "👨‍👩‍👧‍👦", color: "#F4A261", category: "life",
+      branches: [
+        { label: "Người thân", wordIds: ["ff1","ff2","ff8","ff9"] },
+        { label: "Nuôi dạy & gắn kết", wordIds: ["ff3","ff10","ff7"] },
+        { label: "Duy trì mối quan hệ", wordIds: ["ff4","ff5","ff6"] }
+      ],
       words: [
         { id:"ff1", word:"sibling", ipa:"/ˈsɪblɪŋ/", meaning:"anh chị em ruột", example:"I have two siblings, a brother and a sister.", icon:"👫", mnemonic:"Tưởng tượng 2 đứa trẻ giống hệt (similar) nhau đang cãi nhau tranh đồ chơi" },
         { id:"ff2", word:"in-laws", ipa:"/ˈɪn lɔz/", meaning:"gia đình bên vợ/chồng", example:"We're having dinner with my in-laws this weekend.", icon:"👨‍👩‍👧", mnemonic:"Tưởng tượng 1 cuốn LUẬT (law) hôn nhân vừa biến người lạ TRỞ THÀNH (in) người nhà bạn" },
@@ -339,6 +413,11 @@ const VOCAB_DATA = {
     },
     {
       id: "shopping_dining", name: "Mua sắm & Ăn uống", icon: "🛍️", color: "#E76F51", category: "life",
+      branches: [
+        { label: "Mua sắm", wordIds: ["sd1","sd2","sd3","sd4"] },
+        { label: "Gọi món & thanh toán", wordIds: ["sd5","sd6","sd8"] },
+        { label: "Ăn uống", wordIds: ["sd7","sd9","sd10"] }
+      ],
       words: [
         { id:"sd1", word:"bargain", ipa:"/ˈbɑrgɪn/", meaning:"món hời/mặc cả", example:"I got this jacket for a bargain price.", icon:"💰", mnemonic:"Tưởng tượng bạn 'BẮT' được 1 món hời, LÃI (gain) to đùng khi mặc cả thành công" },
         { id:"sd2", word:"receipt", ipa:"/rɪˈsit/", meaning:"hóa đơn", example:"Keep the receipt in case you need to return it.", icon:"🧾", mnemonic:"Tưởng tượng tờ giấy xác NHẬN (receive) bạn đã thanh toán xong, giữ lại phòng khi cần đổi trả" },
@@ -362,6 +441,11 @@ const VOCAB_DATA = {
     },
     {
       id: "health_wellness", name: "Sức khỏe & Thể dục", icon: "💪", color: "#2A9D8F", category: "life",
+      branches: [
+        { label: "Tập luyện", wordIds: ["hw1","hw2","hw3","hw7"] },
+        { label: "Ốm & hồi phục", wordIds: ["hw4","hw5","hw10"] },
+        { label: "Chăm sóc bản thân", wordIds: ["hw6","hw8","hw9"] }
+      ],
       words: [
         { id:"hw1", word:"work out", ipa:"/wɜrk aʊt/", meaning:"tập thể dục", example:"I work out three times a week.", icon:"🏋️", mnemonic:"Tưởng tượng bạn đang LÀM VIỆC (work) cật lực với tạ, mồ hôi vã RA (out) như tắm" },
         { id:"hw2", word:"sore", ipa:"/sɔr/", meaning:"đau nhức (cơ)", example:"My legs are so sore after running.", icon:"🤕", mnemonic:"Tưởng tượng bắp chân bạn đang gào SO ĐAU (sore) sau buổi chạy bộ dài" },
@@ -385,6 +469,11 @@ const VOCAB_DATA = {
     },
     {
       id: "home_daily_life", name: "Nhà cửa & Sinh hoạt hàng ngày", icon: "🏡", color: "#8D6E63", category: "life",
+      branches: [
+        { label: "Việc nhà", wordIds: ["hd1","hd2","hd3"] },
+        { label: "Nhà cửa", wordIds: ["hd4","hd5","hd6","hd7","hd8"] },
+        { label: "Nhịp sống", wordIds: ["hd9","hd10"] }
+      ],
       words: [
         { id:"hd1", word:"chores", ipa:"/tʃɔrz/", meaning:"việc nhà", example:"I do the chores every weekend.", icon:"🧹", mnemonic:"Tưởng tượng 1 danh sách việc lặt vặt dài dằng dặc dán trên tủ lạnh mỗi cuối tuần" },
         { id:"hd2", word:"run errands", ipa:"/rʌn ˈɛrəndz/", meaning:"đi làm việc vặt", example:"I need to run some errands this afternoon.", icon:"🏃‍♀️", mnemonic:"Tưởng tượng bạn CHẠY (run) như con thoi giữa hiệu thuốc, siêu thị để làm hết việc vặt" },
@@ -408,6 +497,11 @@ const VOCAB_DATA = {
     },
     {
       id: "hobbies_entertainment", name: "Sở thích & Giải trí", icon: "🎬", color: "#9C6ADE", category: "life",
+      branches: [
+        { label: "Giải trí tại nhà", wordIds: ["he1","he2","he7","he8"] },
+        { label: "Sở thích cá nhân", wordIds: ["he3","he9","he10","he6"] },
+        { label: "Đi chơi", wordIds: ["he4","he5"] }
+      ],
       words: [
         { id:"he1", word:"binge-watch", ipa:"/bɪndʒ wɑtʃ/", meaning:"xem liên tục nhiều tập", example:"I binge-watched the whole series in a weekend.", icon:"📺", mnemonic:"Tưởng tượng bạn ngồi lì trên ghế, XEM (watch) NGẤU NGHIẾN (binge) hết cả mùa phim trong 1 đêm" },
         { id:"he2", word:"spoiler", ipa:"/ˈspɔɪlər/", meaning:"tình tiết bị lộ", example:"Don't give me any spoilers!", icon:"🙊", mnemonic:"Tưởng tượng có đứa bạn chạy tới LÀM HỎNG (spoil) bất ngờ của cả bộ phim bạn chưa xem" },

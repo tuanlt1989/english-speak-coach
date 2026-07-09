@@ -582,61 +582,76 @@ function wrapLabel(text, maxCharsPerLine) {
   return lines.slice(0, 2);
 }
 
-function curvedPath(x1, y1, x2, y2, curvature) {
-  const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
-  const dx = x2 - x1, dy = y2 - y1;
-  const len = Math.sqrt(dx * dx + dy * dy) || 1;
-  const nx = -dy / len, ny = dx / len;
-  const ctrlX = mx + nx * curvature, ctrlY = my + ny * curvature;
-  return `M ${x1.toFixed(1)} ${y1.toFixed(1)} Q ${ctrlX.toFixed(1)} ${ctrlY.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
-}
+const BRANCH_COLORS = ["#C2410C", "#15803D", "#1D4ED8", "#A16207", "#7C3AED", "#BE123C", "#0F766E", "#B45309"];
 
 function renderMindmapSVG(container, topic, detailContainer) {
   const words = topic.words;
-  const W = 760, H = 760, cx = W / 2, cy = H / 2;
-  const branchR = 150, leafR = 280;
-  const groupSize = 2;
-  const groups = [];
-  for (let i = 0; i < words.length; i += groupSize) groups.push(words.slice(i, i + groupSize));
-  const sectorAngle = (2 * Math.PI) / groups.length;
+  const wordMap = Object.fromEntries(words.map(w => [w.id, w]));
+  const branches = (topic.branches && topic.branches.length)
+    ? topic.branches.map(b => ({ label: b.label, words: b.wordIds.map(id => wordMap[id]).filter(Boolean) }))
+    : [{ label: null, words }];
 
-  let branchSvg = "", twigSvg = "", nodeSvg = "";
+  const size = Math.max(600, Math.min(820, 560 + words.length * 9));
+  const W = size, H = size, cx = W / 2, cy = H / 2;
+  const leafR = size * 0.37;
+  const trunkR = size * 0.084;
+
+  let pathSvg = "", nodeSvg = "", labelSvg = "";
   let leafIndex = 0;
+  let angleCursor = -Math.PI / 2;
+  const TAU = 2 * Math.PI;
 
-  groups.forEach((group, gi) => {
-    const angle = -Math.PI / 2 + gi * sectorAngle;
-    const bx = cx + branchR * Math.cos(angle);
-    const by = cy + branchR * Math.sin(angle);
-    const curveDir = gi % 2 === 0 ? 1 : -1;
-    branchSvg += `<path class="mm-branch mm-branch-main" d="${curvedPath(cx, cy, bx, by, curveDir * 26)}" stroke="${topic.color}" stroke-width="7" fill="none"/>`;
+  branches.forEach((branch, bi) => {
+    const color = BRANCH_COLORS[bi % BRANCH_COLORS.length];
+    const sectorAngle = TAU * (branch.words.length / words.length);
+    const midAngle = angleCursor + sectorAngle / 2;
 
-    const n = group.length;
-    group.forEach((w, i) => {
-      const spread = sectorAngle * 0.62;
-      const leafAngle = n === 1 ? angle : angle - spread / 2 + (i / (n - 1)) * spread;
+    if (branch.label) {
+      const blR = leafR * 0.46;
+      const blx = cx + blR * Math.cos(midAngle);
+      const bly = cy + blR * Math.sin(midAngle);
+      const lines = wrapLabel(branch.label, 12);
+      const padW = Math.max(...lines.map(l => l.length)) * 5.6 + 16;
+      const padH = lines.length * 13 + 12;
+      labelSvg += `<g>
+        <rect x="${(blx - padW / 2).toFixed(1)}" y="${(bly - padH / 2).toFixed(1)}" width="${padW.toFixed(1)}" height="${padH.toFixed(1)}" rx="${padH / 2}" fill="${color}" opacity="0.94"/>
+        <text x="${blx.toFixed(1)}" y="${(bly + (lines.length === 1 ? 4 : -2)).toFixed(1)}" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">${lines.map((l, i) => `<tspan x="${blx.toFixed(1)}" dy="${i === 0 ? 0 : 12}">${escapeXml(l)}</tspan>`).join("")}</text>
+      </g>`;
+    }
+
+    const n = branch.words.length;
+    branch.words.forEach((w, i) => {
+      const leafAngle = n === 1 ? midAngle : angleCursor + (sectorAngle * (i + 0.5)) / n;
       const lx = cx + leafR * Math.cos(leafAngle);
       const ly = cy + leafR * Math.sin(leafAngle);
-      const tCurve = (i - (n - 1) / 2) * 16 * curveDir;
-      twigSvg += `<path class="mm-branch mm-branch-twig" d="${curvedPath(bx, by, lx, ly, tCurve)}" stroke="${topic.color}" stroke-width="3.5" fill="none" opacity="0.65"/>`;
+
+      const c1r = leafR * 0.32;
+      const c1x = cx + c1r * Math.cos(midAngle), c1y = cy + c1r * Math.sin(midAngle);
+      const c2r = leafR * 0.82;
+      const c2x = cx + c2r * Math.cos(leafAngle), c2y = cy + c2r * Math.sin(leafAngle);
+      pathSvg += `<path class="mm-branch" d="M ${cx.toFixed(1)} ${cy.toFixed(1)} C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${lx.toFixed(1)} ${ly.toFixed(1)}" stroke="${color}" stroke-width="3" fill="none" opacity="0.62"/>`;
 
       const box = getCard(w.id).box;
-      let radius = 25, fill = "#C8BFA9", ring = "";
-      if (box >= 1 && box <= 3) { radius = 30; fill = "url(#leafGrad)"; }
+      let radius = 24, fill = "#C8BFA9", ring = "";
+      if (box >= 1 && box <= 3) { radius = 29; fill = "url(#leafGrad)"; }
       else if (box >= 4) {
-        radius = 34; fill = "url(#goldGrad)";
+        radius = 33; fill = "url(#goldGrad)";
         ring = `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${radius + 6}" fill="none" stroke="#D8A13B" stroke-width="2" opacity="0.55"/>`;
       }
-      const delay = ((leafIndex * 0.22) % 2.4).toFixed(2);
+      const delay = ((leafIndex * 0.18) % 2.4).toFixed(2);
       nodeSvg += `
         <g class="mm-node mm-leaf-group" data-id="${w.id}" style="animation-delay:${delay}s; transform-box:fill-box; transform-origin:center;">
           ${ring}
+          <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${radius + 3}" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.5"/>
           <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="${radius}" fill="${fill}" stroke="#FBF9F4" stroke-width="3"/>
           <ellipse cx="${(lx - radius * 0.3).toFixed(1)}" cy="${(ly - radius * 0.35).toFixed(1)}" rx="${(radius * 0.35).toFixed(1)}" ry="${(radius * 0.2).toFixed(1)}" fill="white" opacity="0.35"/>
-          <text x="${lx.toFixed(1)}" y="${(ly + 6).toFixed(1)}" text-anchor="middle" font-size="20">${w.icon}</text>
-          <text x="${lx.toFixed(1)}" y="${(ly + radius + 18).toFixed(1)}" text-anchor="middle" font-size="11" fill="#2B241C" font-weight="600">${escapeXml(w.word)}</text>
+          <text x="${lx.toFixed(1)}" y="${(ly + 6).toFixed(1)}" text-anchor="middle" font-size="19">${w.icon}</text>
+          <text x="${lx.toFixed(1)}" y="${(ly + radius + 17).toFixed(1)}" text-anchor="middle" font-size="10.5" fill="#2B241C" font-weight="600">${escapeXml(w.word)}</text>
         </g>`;
       leafIndex++;
     });
+
+    angleCursor += sectorAngle;
   });
 
   const defs = `<defs>
@@ -649,15 +664,18 @@ function renderMindmapSVG(container, topic, detailContainer) {
     <radialGradient id="trunkGrad" cx="35%" cy="30%" r="75%">
       <stop offset="0%" stop-color="${topic.color}" stop-opacity="0.85"/><stop offset="100%" stop-color="${topic.color}"/>
     </radialGradient>
+    <filter id="trunkShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="${topic.color}" flood-opacity="0.35"/>
+    </filter>
   </defs>`;
 
-  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto">`;
-  svg += defs + branchSvg + twigSvg;
-  svg += `<circle cx="${cx}" cy="${cy}" r="64" fill="url(#trunkGrad)"/>`;
-  svg += `<ellipse cx="${cx - 18}" cy="${cy - 20}" rx="20" ry="14" fill="white" opacity="0.18"/>`;
-  svg += `<text x="${cx}" y="${cy - 8}" text-anchor="middle" font-size="26">${topic.icon}</text>`;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;max-width:720px;display:block;margin:0 auto">`;
+  svg += defs + pathSvg + labelSvg;
+  svg += `<circle cx="${cx}" cy="${cy}" r="${trunkR}" fill="url(#trunkGrad)" filter="url(#trunkShadow)"/>`;
+  svg += `<ellipse cx="${cx - trunkR * 0.28}" cy="${cy - trunkR * 0.32}" rx="${trunkR * 0.32}" ry="${trunkR * 0.22}" fill="white" opacity="0.2"/>`;
+  svg += `<text x="${cx}" y="${cy - trunkR * 0.13}" text-anchor="middle" font-size="${trunkR * 0.42}">${topic.icon}</text>`;
   const nameLines = wrapLabel(topic.name, 15);
-  svg += `<text x="${cx}" y="${cy + 16}" text-anchor="middle" font-size="10.5" fill="white" font-weight="700">${nameLines.map((line, i) => `<tspan x="${cx}" dy="${i === 0 ? 0 : 12}">${escapeXml(line)}</tspan>`).join("")}</text>`;
+  svg += `<text x="${cx}" y="${cy + trunkR * 0.26}" text-anchor="middle" font-size="${trunkR * 0.165}" fill="white" font-weight="700">${nameLines.map((line, i) => `<tspan x="${cx}" dy="${i === 0 ? 0 : trunkR * 0.19}">${escapeXml(line)}</tspan>`).join("")}</text>`;
   svg += nodeSvg;
   svg += `</svg>`;
   container.innerHTML = svg;
@@ -667,13 +685,13 @@ function renderMindmapSVG(container, topic, detailContainer) {
     p.style.strokeDasharray = len;
     p.style.strokeDashoffset = len;
     p.getBoundingClientRect();
-    p.style.transition = `stroke-dashoffset ${0.5 + (idx % 6) * 0.06}s ease ${(idx * 0.05).toFixed(2)}s`;
+    p.style.transition = `stroke-dashoffset ${0.55 + (idx % 6) * 0.06}s ease ${(idx * 0.045).toFixed(2)}s`;
     requestAnimationFrame(() => { p.style.strokeDashoffset = 0; });
   });
 
   container.querySelectorAll(".mm-node").forEach(node => {
     node.addEventListener("click", () => {
-      const w = words.find(x => x.id === node.dataset.id);
+      const w = wordMap[node.dataset.id];
       speak(w.word);
       detailContainer.innerHTML = `
         <strong>${w.icon} ${w.word}</strong> <span class="muted">${w.ipa}</span><br>
