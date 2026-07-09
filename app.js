@@ -131,6 +131,49 @@ function getSpeechRecognition() {
   return r;
 }
 
+// ===================== Visual polish helpers =====================
+function greetingText() {
+  const h = new Date().getHours();
+  if (h < 11) return "Chào buổi sáng 👋";
+  if (h < 14) return "Chào buổi trưa 👋";
+  if (h < 18) return "Chào buổi chiều 👋";
+  return "Chào buổi tối 👋";
+}
+
+function animateCounter(el, target) {
+  const start = Number(el.textContent) || 0;
+  if (start === target) { el.textContent = target; return; }
+  const duration = 500;
+  const t0 = performance.now();
+  function tick(now) {
+    const p = Math.min(1, (now - t0) / duration);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(start + (target - start) * eased);
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = target;
+  }
+  requestAnimationFrame(tick);
+}
+
+const CONFETTI_COLORS = ["#D97757", "#6A8E7F", "#D8A13B", "#5B7FA6", "#4F9D69"];
+function confettiBurst(count = 60) {
+  const layer = document.getElementById("confettiLayer");
+  if (!layer) return;
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    const size = 6 + Math.random() * 6;
+    piece.style.width = size + "px";
+    piece.style.height = size * 0.4 + "px";
+    piece.style.left = Math.random() * 100 + "vw";
+    piece.style.background = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+    piece.style.animationDuration = (2.2 + Math.random() * 1.6) + "s";
+    piece.style.animationDelay = (Math.random() * 0.3) + "s";
+    layer.appendChild(piece);
+    setTimeout(() => piece.remove(), 4200);
+  }
+}
+
 // ===================== Navigation =====================
 function showView(name) {
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
@@ -161,13 +204,15 @@ function fillTopicSelect(selectEl, selectedId) {
 }
 
 function renderDashboard() {
-  document.getElementById("streakNum").textContent = STATE.streak.count || 0;
-  document.getElementById("dueNum").textContent = dueCards(9999).length;
+  document.getElementById("greeting").textContent = greetingText();
+  animateCounter(document.getElementById("streakNum"), STATE.streak.count || 0);
+  animateCounter(document.getElementById("dueNum"), dueCards(9999).length);
   const learnedCount = allWords().filter(w => getCard(w.id).box === 5).length;
-  document.getElementById("masteredNum").textContent = learnedCount;
+  animateCounter(document.getElementById("masteredNum"), learnedCount);
 
   const tTopic = todayTopic();
-  document.getElementById("todayTopicName").textContent = `${tTopic.icon} ${tTopic.name}`;
+  document.getElementById("todayTopicIcon").textContent = tTopic.icon;
+  document.getElementById("todayTopicName").textContent = tTopic.name;
 
   const picker = document.getElementById("topicPicker");
   fillTopicSelect(picker, tTopic.id);
@@ -245,23 +290,31 @@ function renderReviewStage(el) {
   const w = queue[SESSION.reviewIdx];
   el.innerHTML = `
     <p class="muted">Ôn từ cũ &nbsp;•&nbsp; ${SESSION.reviewIdx + 1}/${queue.length}</p>
-    <div class="flashcard" id="fc">
-      <div class="icon">${w.icon}</div>
-      <div class="word">${w.word}</div>
-      <div class="ipa">${w.ipa}</div>
-      <div id="fcBack" style="display:none">
-        <div class="meaning">${w.meaning}</div>
-        <div class="example">"${w.example}"</div>
+    <div class="flip-scene">
+      <div class="flip-card" id="fc">
+        <div class="flip-card-inner">
+          <div class="flip-face flip-front">
+            <div class="icon">${w.icon}</div>
+            <div class="word">${w.word}</div>
+            <div class="ipa">${w.ipa}</div>
+            <div class="hint">👆 Bấm vào thẻ để xem nghĩa</div>
+          </div>
+          <div class="flip-face flip-back">
+            <div class="icon">${w.icon}</div>
+            <div class="meaning">${w.meaning}</div>
+            <div class="example">"${w.example}"</div>
+          </div>
+        </div>
       </div>
-      <div class="hint">👆 Bấm vào thẻ để xem nghĩa</div>
     </div>
     <div class="answer-buttons" id="answerBtns" style="display:none">
       <button class="btn danger" id="forgotBtn">😵 Chưa nhớ</button>
       <button class="btn success" id="rememberBtn">✅ Nhớ rồi</button>
     </div>
   `;
-  document.getElementById("fc").onclick = () => {
-    document.getElementById("fcBack").style.display = "block";
+  document.getElementById("fc").onclick = function () {
+    if (this.classList.contains("flipped")) return;
+    this.classList.add("flipped");
     document.getElementById("answerBtns").style.display = "flex";
     speak(w.word);
   };
@@ -378,7 +431,7 @@ function renderSpeakStage(el) {
         const said = e.results[0][0].transcript;
         const score = scorePhrase(p.phrase, said);
         let cls = "poor", label = "Cần luyện thêm 💪";
-        if (score >= 80) { cls = "great"; label = "Xuất sắc! 🎉"; }
+        if (score >= 80) { cls = "great"; label = "Xuất sắc! 🎉"; confettiBurst(35); }
         else if (score >= 50) { cls = "ok"; label = "Khá ổn 👍"; }
         document.getElementById("sttResult").innerHTML = `
           <div class="transcript-box">Bạn nói: "<em>${said}</em>"</div>
@@ -414,12 +467,13 @@ function renderDoneStage(el) {
   el.innerHTML = `
     <div class="empty-state">
       <div style="font-size:50px">🎉</div>
-      <h2 style="color:var(--text)">Hoàn thành buổi học hôm nay!</h2>
+      <h2>Hoàn thành buổi học hôm nay!</h2>
       <p>Bạn đã ôn ${SESSION.reviewedCount} thẻ cũ và học ${SESSION.newLearnedCount} từ mới.</p>
       <p>Chuỗi ngày học liên tiếp: 🔥 ${STATE.streak.count}</p>
     </div>
     <button class="btn primary big" id="backBtn">← Về trang chủ</button>
   `;
+  confettiBurst(90);
   document.getElementById("backBtn").onclick = () => showView("dashboard");
 }
 
@@ -492,11 +546,11 @@ function renderMindmapSVG(container, topic, detailContainer) {
     const x = cx + r * Math.cos(angle);
     const y = cy + r * Math.sin(angle);
     const box = getCard(w.id).box;
-    const fill = box >= 4 ? "#22c55e" : box >= 1 ? "#f59e0b" : "#374151";
+    const fill = box >= 4 ? "#4F9D69" : box >= 1 ? "#D8A13B" : "#C8BFA9";
     svg += `<g class="mm-node" data-id="${w.id}" style="cursor:pointer">
-      <circle cx="${x}" cy="${y}" r="34" fill="${fill}" stroke="#0f1220" stroke-width="2"/>
+      <circle cx="${x}" cy="${y}" r="34" fill="${fill}" stroke="#FBF9F4" stroke-width="3"/>
       <text x="${x}" y="${y - 2}" text-anchor="middle" font-size="20">${w.icon}</text>
-      <text x="${x}" y="${y + 44}" text-anchor="middle" font-size="11" fill="#eef0fb">${escapeXml(w.word)}</text>
+      <text x="${x}" y="${y + 44}" text-anchor="middle" font-size="11" fill="#2B241C" font-weight="600">${escapeXml(w.word)}</text>
     </g>`;
   });
   svg += `</svg>`;
@@ -507,9 +561,9 @@ function renderMindmapSVG(container, topic, detailContainer) {
       speak(w.word);
       detailContainer.innerHTML = `
         <strong>${w.icon} ${w.word}</strong> <span class="muted">${w.ipa}</span><br>
-        <span style="color:var(--accent-2)">${w.meaning}</span><br>
+        <span style="color:var(--sage);font-weight:700">${w.meaning}</span><br>
         <em class="muted">"${w.example}"</em>
-        ${w.mnemonic ? `<br><span style="color:#fbbf24">💡 ${w.mnemonic}</span>` : ""}
+        ${w.mnemonic ? `<br><span style="color:var(--gold)">💡 ${w.mnemonic}</span>` : ""}
       `;
     });
   });

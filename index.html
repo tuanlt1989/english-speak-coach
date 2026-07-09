@@ -3,19 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#F7F3EB">
 <title>Speak Coach — Luyện nói & Từ vựng công sở</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗣️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
 <div id="app">
 
   <header class="topbar">
-    <div class="brand">🗣️ <span>Speak Coach</span></div>
+    <div class="brand"><span class="brand-mark">🗣️</span><span>Speak Coach</span></div>
     <nav class="tabs">
-      <button class="tab-btn active" data-view="dashboard">🏠 Trang chủ</button>
-      <button class="tab-btn" data-view="deck">🃏 Thẻ từ</button>
-      <button class="tab-btn" data-view="mindmap">🧠 Mindmap</button>
-      <button class="tab-btn" data-view="stats">📈 Tiến độ</button>
+      <button class="tab-btn active" data-view="dashboard"><span class="tab-ic">🏠</span>Trang chủ</button>
+      <button class="tab-btn" data-view="deck"><span class="tab-ic">🃏</span>Thẻ từ</button>
+      <button class="tab-btn" data-view="mindmap"><span class="tab-ic">🧠</span>Mindmap</button>
+      <button class="tab-btn" data-view="stats"><span class="tab-ic">📈</span>Tiến độ</button>
     </nav>
   </header>
 
@@ -23,30 +33,37 @@
 
     <!-- DASHBOARD -->
     <section id="view-dashboard" class="view active">
+      <div class="greeting" id="greeting">Chào bạn 👋</div>
+
       <div class="hero">
-        <div class="hero-stat">
-          <div class="stat-num" id="streakNum">0</div>
-          <div class="stat-label">🔥 ngày liên tiếp</div>
+        <div class="hero-stat stat-streak">
+          <div class="stat-icon">🔥</div>
+          <div><div class="stat-num" id="streakNum">0</div><div class="stat-label">ngày liên tiếp</div></div>
         </div>
-        <div class="hero-stat">
-          <div class="stat-num" id="dueNum">0</div>
-          <div class="stat-label">🃏 thẻ cần ôn</div>
+        <div class="hero-stat stat-due">
+          <div class="stat-icon">🃏</div>
+          <div><div class="stat-num" id="dueNum">0</div><div class="stat-label">thẻ cần ôn</div></div>
         </div>
-        <div class="hero-stat">
-          <div class="stat-num" id="masteredNum">0</div>
-          <div class="stat-label">✅ từ đã thuộc</div>
+        <div class="hero-stat stat-mastered">
+          <div class="stat-icon">✅</div>
+          <div><div class="stat-num" id="masteredNum">0</div><div class="stat-label">từ đã thuộc</div></div>
         </div>
       </div>
 
-      <div class="card today-card">
-        <h2>Buổi học hôm nay (~45-60 phút)</h2>
-        <p class="muted">Chủ đề hôm nay: <strong id="todayTopicName">—</strong></p>
+      <div class="card today-card" id="todayCard">
+        <div class="today-card-head">
+          <div class="today-topic-icon" id="todayTopicIcon">🗓️</div>
+          <div>
+            <div class="eyebrow">Buổi học hôm nay · ~45-60 phút</div>
+            <h2 id="todayTopicName">—</h2>
+          </div>
+        </div>
         <ol class="plan-steps">
-          <li>🃏 Ôn từ cũ đến hạn (~10 phút)</li>
-          <li>🆕 Học 8 từ mới + hình ảnh ghi nhớ (~15 phút)</li>
-          <li>💬 Luyện cụm câu giao tiếp + nghe (~10 phút)</li>
-          <li>🎤 Luyện nói - nói theo & chấm điểm (~15 phút)</li>
-          <li>🧠 Xem mindmap tổng kết chủ đề (~5 phút)</li>
+          <li><span class="step-ic">🃏</span> Ôn từ cũ đến hạn <em>(~10 phút)</em></li>
+          <li><span class="step-ic">🆕</span> Học 8 từ mới + hình ảnh ghi nhớ <em>(~15 phút)</em></li>
+          <li><span class="step-ic">💬</span> Luyện cụm câu giao tiếp + nghe <em>(~10 phút)</em></li>
+          <li><span class="step-ic">🎤</span> Luyện nói - nói theo & chấm điểm <em>(~15 phút)</em></li>
+          <li><span class="step-ic">🧠</span> Xem mindmap tổng kết chủ đề <em>(~5 phút)</em></li>
         </ol>
         <button id="startSessionBtn" class="btn primary big">▶ Bắt đầu buổi học hôm nay</button>
         <div class="row">
@@ -57,23 +74,23 @@
 
       <div class="card">
         <h3>Vì sao học kiểu này?</h3>
-        <ul class="tips">
-          <li><strong>Spaced Repetition (SRS):</strong> từ đã học sẽ tự quay lại đúng lúc sắp quên, giúp nhớ lâu mà không cần ôn dồn.</li>
-          <li><strong>Hình ảnh + mẹo nhớ (mnemonic):</strong> mỗi từ có icon và mẹo liên tưởng để nhớ nhanh hơn chữ thuần.</li>
-          <li><strong>Luyện nói thật:</strong> dùng micro để nói theo câu mẫu, app chấm độ khớp để bạn tự sửa phát âm.</li>
-          <li><strong>Mindmap:</strong> nhìn tổng thể chủ đề theo cụm, dễ nhớ hệ thống hơn học rời rạc.</li>
-        </ul>
+        <div class="tips-grid">
+          <div class="tip-card"><div class="tip-ic">🔁</div><strong>Spaced Repetition</strong><p>Từ đã học tự quay lại đúng lúc sắp quên, nhớ lâu mà không cần ôn dồn.</p></div>
+          <div class="tip-card"><div class="tip-ic">💡</div><strong>Hình ảnh + mẹo nhớ</strong><p>Mỗi từ có icon và mẹo liên tưởng, nhớ nhanh hơn học chữ thuần.</p></div>
+          <div class="tip-card"><div class="tip-ic">🎤</div><strong>Luyện nói thật</strong><p>Nói theo câu mẫu bằng micro, app chấm độ khớp để tự sửa phát âm.</p></div>
+          <div class="tip-card"><div class="tip-ic">🧠</div><strong>Mindmap</strong><p>Nhìn tổng thể chủ đề theo cụm, dễ nhớ hệ thống hơn học rời rạc.</p></div>
+        </div>
       </div>
     </section>
 
     <!-- SESSION FLOW -->
     <section id="view-session" class="view">
-      <div class="session-progress">
-        <div class="seg" data-stage="review">1. Ôn cũ</div>
-        <div class="seg" data-stage="new">2. Từ mới</div>
-        <div class="seg" data-stage="phrase">3. Cụm câu</div>
-        <div class="seg" data-stage="speak">4. Luyện nói</div>
-        <div class="seg" data-stage="mindmap">5. Mindmap</div>
+      <div class="session-progress" id="sessionProgress">
+        <div class="seg" data-stage="review"><span class="seg-dot">1</span>Ôn cũ</div>
+        <div class="seg" data-stage="new"><span class="seg-dot">2</span>Từ mới</div>
+        <div class="seg" data-stage="phrase"><span class="seg-dot">3</span>Cụm câu</div>
+        <div class="seg" data-stage="speak"><span class="seg-dot">4</span>Luyện nói</div>
+        <div class="seg" data-stage="mindmap"><span class="seg-dot">5</span>Mindmap</div>
       </div>
       <div id="sessionContent" class="card"></div>
     </section>
@@ -108,9 +125,9 @@
       <div class="card">
         <h2>Tiến độ học tập</h2>
         <div class="hero">
-          <div class="hero-stat"><div class="stat-num" id="statTotalWords">0</div><div class="stat-label">Tổng từ trong hệ thống</div></div>
-          <div class="hero-stat"><div class="stat-num" id="statLearned">0</div><div class="stat-label">Đã học</div></div>
-          <div class="hero-stat"><div class="stat-num" id="statMastered">0</div><div class="stat-label">Đã thuộc (box 5)</div></div>
+          <div class="hero-stat stat-total"><div class="stat-icon">📚</div><div><div class="stat-num" id="statTotalWords">0</div><div class="stat-label">Tổng từ trong hệ thống</div></div></div>
+          <div class="hero-stat stat-learned"><div class="stat-icon">🌱</div><div><div class="stat-num" id="statLearned">0</div><div class="stat-label">Đã học</div></div></div>
+          <div class="hero-stat stat-mastered2"><div class="stat-icon">🏆</div><div><div class="stat-num" id="statMastered">0</div><div class="stat-label">Đã thuộc (box 5)</div></div></div>
         </div>
         <h3>Phân bố theo mức độ nhớ (Leitner box 1→5)</h3>
         <div id="boxChart" class="box-chart"></div>
@@ -121,6 +138,7 @@
 
   </main>
 </div>
+<div id="confettiLayer" aria-hidden="true"></div>
 
 <script src="data.js"></script>
 <script src="app.js"></script>
