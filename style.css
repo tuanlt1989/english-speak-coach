@@ -247,7 +247,9 @@ select, input[type=text] {
 .phrase-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
 .phrase-item .en { font-size: 17px; font-weight: 700; font-family: var(--font-display); }
 .phrase-item .vi { color: var(--ink-soft); margin-top: 4px; }
-.phrase-item .ctx { color: var(--gold); font-size: 13px; margin-top: 4px; }
+.phrase-item .hook { color: var(--sage); background: var(--sage-light); border-radius: 8px; padding: 7px 10px; margin-top: 8px; font-size: 13px; line-height: 1.4; }
+.phrase-item .hook strong { color: #3d6b58; }
+.phrase-item .ctx { color: var(--gold); font-size: 13px; margin-top: 6px; }
 .phrase-item .actions { display: flex; gap: 8px; margin-top: 10px; }
 .phrase-item .actions .btn { padding: 7px 14px; font-size: 13px; }
 .score-result { margin-top: 10px; font-size: 14px; padding: 10px 12px; border-radius: var(--radius-sm); font-weight: 600; }

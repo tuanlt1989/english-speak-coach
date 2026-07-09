@@ -409,6 +409,7 @@ function renderPhraseStage(el) {
     div.innerHTML = `
       <div class="en">${p.phrase}</div>
       <div class="vi">${p.meaning}</div>
+      ${p.hook ? `<div class="hook">🎬 <strong>Hình dung:</strong> ${p.hook}</div>` : ""}
       ${p.context ? `<div class="ctx">📌 ${p.context}</div>` : ""}
       <div class="actions"><button class="btn ghost listen-btn">🔊 Nghe</button></div>
     `;
