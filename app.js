@@ -120,15 +120,42 @@ document.querySelectorAll(".mode-btn").forEach(btn => {
 });
 
 // ===================== Speech (TTS / STT) =====================
+// Ranked by naturalness — Chrome's "Google US English" and macOS/iOS's premium
+// "Natural"/enhanced voices sound far less robotic than the plain default voice.
+const VOICE_PRIORITY = [
+  "Google US English", "Google UK English Female",
+  "Samantha", "Ava", "Ava (Premium)", "Zoe", "Nicky",
+  "Microsoft Aria Online (Natural)", "Microsoft Jenny Online (Natural)", "Microsoft Guy Online (Natural)",
+  "Karen", "Moira", "Tessa"
+];
+let cachedVoice = null;
+function pickBestVoice() {
+  if (cachedVoice) return cachedVoice;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return null;
+  for (const name of VOICE_PRIORITY) {
+    const match = voices.find(v => v.name === name);
+    if (match) { cachedVoice = match; return match; }
+  }
+  const enLocal = voices.find(v => v.lang === "en-US" && v.localService);
+  if (enLocal) { cachedVoice = enLocal; return enLocal; }
+  const enUS = voices.find(v => v.lang === "en-US") || voices.find(v => v.lang && v.lang.startsWith("en"));
+  cachedVoice = enUS || null;
+  return cachedVoice;
+}
+if ("speechSynthesis" in window) {
+  window.speechSynthesis.onvoiceschanged = () => { cachedVoice = null; pickBestVoice(); };
+}
+
 function speak(text) {
   if (!("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = "en-US";
-  u.rate = 0.92;
-  const voices = window.speechSynthesis.getVoices();
-  const enVoice = voices.find(v => v.lang === "en-US") || voices.find(v => v.lang.startsWith("en"));
-  if (enVoice) u.voice = enVoice;
+  u.rate = 0.94;
+  u.pitch = 1.0;
+  const voice = pickBestVoice();
+  if (voice) u.voice = voice;
   window.speechSynthesis.speak(u);
 }
 
@@ -332,6 +359,7 @@ function renderReviewStage(el) {
             <div class="icon">${w.icon}</div>
             <div class="meaning">${w.meaning}</div>
             <div class="example">"${w.example}"</div>
+            ${w.visual ? `<div class="visual">🎬 ${w.visual}</div>` : ""}
           </div>
         </div>
       </div>
@@ -379,6 +407,7 @@ function renderNewStage(el) {
       <div class="ipa">${w.ipa}</div>
       <div class="meaning">${w.meaning}</div>
       <div class="example">"${w.example}"</div>
+      ${w.visual ? `<div class="visual">🎬 Hình dung: ${w.visual}</div>` : ""}
       ${w.mnemonic ? `<div class="mnemonic">💡 Mẹo nhớ: ${w.mnemonic}</div>` : ""}
     </div>
     <div class="row" style="justify-content:center">
@@ -697,6 +726,7 @@ function renderMindmapSVG(container, topic, detailContainer) {
         <strong>${w.icon} ${w.word}</strong> <span class="muted">${w.ipa}</span><br>
         <span style="color:var(--sage);font-weight:700">${w.meaning}</span><br>
         <em class="muted">"${w.example}"</em>
+        ${w.visual ? `<br><span style="color:var(--blue)">🎬 ${w.visual}</span>` : ""}
         ${w.mnemonic ? `<br><span style="color:var(--gold)">💡 ${w.mnemonic}</span>` : ""}
       `;
     });
@@ -741,7 +771,5 @@ function renderStatsView() {
 }
 
 // ===================== Init =====================
-if ("speechSynthesis" in window) {
-  window.speechSynthesis.onvoiceschanged = () => {};
-}
+if ("speechSynthesis" in window) pickBestVoice();
 renderDashboard();

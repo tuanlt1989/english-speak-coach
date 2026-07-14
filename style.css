@@ -202,16 +202,16 @@ select, input[type=text] {
 
 /* Flip flashcards */
 .flip-scene { perspective: 1400px; margin: 18px 0; }
-.flip-card { position: relative; width: 100%; min-height: 240px; cursor: pointer; }
+.flip-card { position: relative; width: 100%; min-height: 380px; cursor: pointer; }
 .flip-card-inner {
-  position: relative; width: 100%; min-height: 240px; text-align: center;
+  position: relative; width: 100%; min-height: 380px; text-align: center;
   transition: transform .55s cubic-bezier(.4,.2,.2,1); transform-style: preserve-3d;
 }
 .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
 .flip-face {
   position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--radius);
   border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 28px 20px; box-shadow: var(--shadow-sm);
+  padding: 28px 20px; box-shadow: var(--shadow-sm); overflow-y: auto;
 }
 .flip-front { background: linear-gradient(160deg, var(--cream-2), var(--paper)); }
 .flip-back { background: linear-gradient(160deg, var(--sage-light), var(--cream-2)); transform: rotateY(180deg); }
@@ -220,7 +220,8 @@ select, input[type=text] {
 .flip-face .ipa { color: var(--ink-soft); margin-top: 4px; font-size: 15px; }
 .flip-face .meaning { font-size: 21px; color: var(--sage); margin-top: 8px; font-weight: 700; font-family: var(--font-display); }
 .flip-face .example { color: var(--ink-soft); font-style: italic; margin-top: 12px; max-width: 460px; font-size: 14.5px; }
-.flip-face .mnemonic { color: var(--gold); background: var(--gold-light); border-radius: 10px; padding: 8px 12px; margin-top: 12px; font-size: 13.5px; max-width: 460px; }
+.flip-face .visual { color: var(--blue); background: var(--blue-light); border-radius: 10px; padding: 8px 12px; margin-top: 10px; font-size: 13.5px; max-width: 460px; }
+.flip-face .mnemonic { color: var(--gold); background: var(--gold-light); border-radius: 10px; padding: 8px 12px; margin-top: 10px; font-size: 13.5px; max-width: 460px; }
 .flip-face .hint { color: var(--ink-faint); font-size: 12px; margin-top: 18px; }
 
 /* Static (non-flip) intro card for new words */
@@ -235,7 +236,8 @@ select, input[type=text] {
 .flashcard .ipa { color: var(--ink-soft); margin-top: 4px; }
 .flashcard .meaning { font-size: 20px; color: var(--sage); margin-top: 10px; font-weight: 700; font-family: var(--font-display); }
 .flashcard .example { color: var(--ink-soft); font-style: italic; margin-top: 12px; max-width: 500px; }
-.flashcard .mnemonic { color: var(--gold); background: var(--gold-light); border-radius: 10px; padding: 8px 12px; margin-top: 12px; font-size: 14px; max-width: 500px; }
+.flashcard .visual { color: var(--blue); background: var(--blue-light); border-radius: 10px; padding: 8px 12px; margin-top: 10px; font-size: 14px; max-width: 500px; }
+.flashcard .mnemonic { color: var(--gold); background: var(--gold-light); border-radius: 10px; padding: 8px 12px; margin-top: 10px; font-size: 14px; max-width: 500px; }
 
 .answer-buttons { display: flex; gap: 10px; margin-top: 14px; }
 .answer-buttons .btn { flex: 1; }
