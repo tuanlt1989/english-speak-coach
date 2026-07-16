@@ -324,6 +324,15 @@ select, input[type=text] {
   to { transform: translateY(110vh) rotate(540deg); opacity: 0.9; }
 }
 
+/* Emoji mini-scene animation - cycles 2-4 emoji like a tiny looping GIF */
+.scene-frame { display: inline-block; }
+.scene-frame.scene-pop { animation: scenePop 0.5s cubic-bezier(.4,.2,.2,1); }
+@keyframes scenePop {
+  0% { transform: scale(0.4) rotate(-10deg); opacity: 0; }
+  55% { transform: scale(1.18) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
 @media (max-width: 600px) {
   .tabs { width: 100%; justify-content: space-between; }
   .tab-btn { flex: 1; padding: 9px 4px; font-size: 12px; justify-content: center; }

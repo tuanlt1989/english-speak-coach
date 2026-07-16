@@ -159,6 +159,31 @@ function speak(text) {
   window.speechSynthesis.speak(u);
 }
 
+// ===================== Emoji mini-scene animation =====================
+// Cycles a word's `scene` (2-4 emoji) like a tiny looping GIF so each word
+// gets a mini animated "acted out" visual instead of one static icon.
+let activeSceneTimers = [];
+function clearSceneTimers() {
+  activeSceneTimers.forEach(t => clearInterval(t));
+  activeSceneTimers = [];
+}
+function mountScene(containerEl, frames, intervalMs = 1100) {
+  if (!containerEl) return;
+  if (!frames || frames.length === 0) return;
+  if (frames.length === 1) { containerEl.textContent = frames[0]; return; }
+  let i = 0;
+  containerEl.textContent = frames[0];
+  containerEl.classList.add("scene-frame");
+  const timer = setInterval(() => {
+    i = (i + 1) % frames.length;
+    containerEl.classList.remove("scene-pop");
+    void containerEl.offsetWidth;
+    containerEl.textContent = frames[i];
+    containerEl.classList.add("scene-pop");
+  }, intervalMs);
+  activeSceneTimers.push(timer);
+}
+
 function normalizeForScore(s) {
   return s.toLowerCase().replace(/[^a-z0-9' ]/g, "").split(/\s+/).filter(Boolean);
 }
@@ -230,6 +255,7 @@ function confettiBurst(count = 60) {
 
 // ===================== Navigation =====================
 function showView(name) {
+  if (name !== "session") clearSceneTimers();
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.getElementById("view-" + name).classList.add("active");
@@ -330,6 +356,7 @@ function renderSessionStage() {
 }
 
 function renderReviewStage(el) {
+  clearSceneTimers();
   const queue = SESSION.reviewQueue;
   if (queue.length === 0) {
     el.innerHTML = `<div class="empty-state">🎉 Không có thẻ nào cần ôn hôm nay!</div>
@@ -350,13 +377,13 @@ function renderReviewStage(el) {
       <div class="flip-card" id="fc">
         <div class="flip-card-inner">
           <div class="flip-face flip-front">
-            <div class="icon">${w.icon}</div>
+            <div class="icon" id="fcIconFront">${w.icon}</div>
             <div class="word">${w.word}</div>
             <div class="ipa">${w.ipa}</div>
             <div class="hint">👆 Bấm vào thẻ để xem nghĩa</div>
           </div>
           <div class="flip-face flip-back">
-            <div class="icon">${w.icon}</div>
+            <div class="icon" id="fcIconBack">${w.icon}</div>
             <div class="meaning">${w.meaning}</div>
             <div class="example">"${w.example}"</div>
             ${w.visual ? `<div class="visual">🎬 ${w.visual}</div>` : ""}
@@ -369,6 +396,8 @@ function renderReviewStage(el) {
       <button class="btn success" id="rememberBtn">✅ Nhớ rồi</button>
     </div>
   `;
+  mountScene(document.getElementById("fcIconFront"), w.scene);
+  mountScene(document.getElementById("fcIconBack"), w.scene);
   document.getElementById("fc").onclick = function () {
     if (this.classList.contains("flipped")) return;
     this.classList.add("flipped");
@@ -390,6 +419,7 @@ function renderReviewStage(el) {
 }
 
 function renderNewStage(el) {
+  clearSceneTimers();
   const queue = SESSION.newQueue;
   if (queue.length === 0 || SESSION.newIdx >= queue.length) {
     logToday({ newWords: SESSION.newLearnedCount, reviewed: SESSION.reviewedCount });
@@ -402,7 +432,7 @@ function renderNewStage(el) {
   el.innerHTML = `
     <p class="muted">Từ mới &nbsp;•&nbsp; ${SESSION.newIdx + 1}/${queue.length}</p>
     <div class="flashcard">
-      <div class="icon">${w.icon}</div>
+      <div class="icon" id="fcIconNew">${w.icon}</div>
       <div class="word">${w.word}</div>
       <div class="ipa">${w.ipa}</div>
       <div class="meaning">${w.meaning}</div>
@@ -415,6 +445,7 @@ function renderNewStage(el) {
       <button class="btn primary" id="gotItBtn">👍 Đã hiểu, học tiếp</button>
     </div>
   `;
+  mountScene(document.getElementById("fcIconNew"), w.scene);
   document.getElementById("listenBtn").onclick = () => speak(w.word + ". " + w.example);
   document.getElementById("gotItBtn").onclick = () => {
     markLearned(w.id);
